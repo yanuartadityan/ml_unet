@@ -9,9 +9,11 @@ class DoubleConv(nn.Module):
     def __init__(self, in_channels, out_channels):
         super(DoubleConv, self).__init__()
         self.conv = nn.Sequential(
-            nn.Conv2d(in_channels, out_channels, 3, 1, 1),
+            nn.Conv2d(in_channels, out_channels, 3, 1, 1, bias=False),
+            nn.BatchNorm2d(out_channels),
             nn.ReLU(inplace=True),
-            nn.Conv2d(out_channels, out_channels, 3, 1, 1),
+            nn.Conv2d(out_channels, out_channels, 3, 1, 1, bias=False),
+            nn.BatchNorm2d(out_channels),
             nn.ReLU(inplace=True),
         )
 
@@ -73,7 +75,7 @@ class UNet(nn.Module):
 
 
 def test_shape():
-    x = torch.randn((3, 1, 256, 256))
+    x = torch.randn((3, 1, 240, 160))
     model = UNet(in_channels=1, out_channels=1)
     pred = model(x)
 
