@@ -79,7 +79,7 @@ def check_acc(loader, model, device):
     with torch.no_grad():
         for x, y in loader:
             x = x.to(device)
-            y = y.to(device)
+            y = y.to(device).unsqueeze(1)
             preds = torch.sigmoid(model(x))
             preds = (preds > 0.5).float()
             n_correct += (preds == y).sum()
