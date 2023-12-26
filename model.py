@@ -1,6 +1,7 @@
 import torch
 import torch.nn as nn
 import torchvision.transforms.functional as tf
+from torchview import draw_graph
 
 
 class DoubleConv(nn.Module):
@@ -79,9 +80,26 @@ def test_shape():
     model = UNet(in_channels=1, out_channels=1)
     pred = model(x)
 
+    draw_model(model, x)
+
     print(x.shape)
     print(pred.shape)
     assert x.shape == pred.shape
+
+
+def draw_model(model, input, device="meta"):
+    import graphviz
+
+    graphviz.set_jupyter_format("svg")
+    model_graph = draw_graph(
+        model=model,
+        input_size=input.shape,
+        device="cuda" if torch.cuda.is_available() else device,
+        save_graph=True,
+        filename="model",
+        directory=".",
+    )
+    model_graph.visual_graph
 
 
 if __name__ == "__main__":
